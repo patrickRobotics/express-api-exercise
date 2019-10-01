@@ -24,7 +24,31 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
+
 app.use(bodyParser.json());
+
+app.post('/api/recipes', (req, res, next) => {
+    const recipe = new Recipe({
+      title: req.body.title,
+      ingredients: req.body.ingredients,
+      instructions: req.body.instructions,
+      difficulty: req.body.difficulty,
+      time: req.body.time
+    });
+    recipe.save().then(
+      () => {
+        res.status(201).json({
+          message: 'Recipe created successfully!'
+        });
+      }
+    ).catch(
+      (error) => {
+        res.status(400).json({
+          error: error
+        });
+      }
+    );
+});
 
 app.use((req, res) => {
     res.json({ message: 'Your request was successful!' }); 
