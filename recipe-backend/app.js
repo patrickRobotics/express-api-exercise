@@ -49,6 +49,46 @@ app.post('/api/recipes', (req, res, next) => {
         }
     );
 });
+ 
+app.get('/api/recipes/:id', (req, res, next) => {
+    Recipe.findOne({
+        _id: req.params.id
+      }).then(
+        (recipe) => {
+          res.status(200).json(recipe);
+        }
+      ).catch(
+        (error) => {
+          res.status(404).json({
+            error: error
+          });
+        }
+      );
+});
+
+app.put('/api/recipes/:id', (req, res, next) => {
+    const recipe = new Recipe({
+        _id: req.params.id,
+        title: req.body.title,
+        ingredients: req.body.ingredients,
+        instructions: req.body.instructions,
+        difficulty: req.body.difficulty,
+        time: req.body.time
+    });
+    Recipe.update({_id: req.params.id}, recipe)
+    .then(() => {
+        res.status(201).json({
+            message: 'Recipe updated successfully!'
+        });
+    })
+    .catch(
+        (error) => {
+          res.status(400).json({
+            error: error
+          });
+        }
+    );
+});
 
 app.use('/api/recipes', (req, res, next) => {
     Recipe.find()
@@ -59,5 +99,6 @@ app.use('/api/recipes', (req, res, next) => {
         res.status(400).json({ error: error });
     });
 });
+
  
 module.exports = app;
