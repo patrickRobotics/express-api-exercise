@@ -90,6 +90,22 @@ app.put('/api/recipes/:id', (req, res, next) => {
     );
 });
 
+app.delete('/api/recipes/:id', (req, res, next) => {
+    Recipe.deleteOne({_id: req.params.id})
+    .then(() => {
+        res.status(200).json({
+            message: 'Recipe Deleted!'
+        });
+    })
+    .catch(
+        (error) => {
+            res.status(400).json({
+                error: error
+            });
+        }
+    );
+});
+
 app.use('/api/recipes', (req, res, next) => {
     Recipe.find()
     .then((recipes) => {
