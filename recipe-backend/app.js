@@ -29,29 +29,35 @@ app.use(bodyParser.json());
 
 app.post('/api/recipes', (req, res, next) => {
     const recipe = new Recipe({
-      title: req.body.title,
-      ingredients: req.body.ingredients,
-      instructions: req.body.instructions,
-      difficulty: req.body.difficulty,
-      time: req.body.time
+        title: req.body.title,
+        ingredients: req.body.ingredients,
+        instructions: req.body.instructions,
+        difficulty: req.body.difficulty,
+        time: req.body.time
     });
     recipe.save().then(
       () => {
-        res.status(201).json({
-          message: 'Recipe created successfully!'
-        });
+            res.status(201).json({
+                message: 'Recipe created successfully!'
+            });
       }
     ).catch(
-      (error) => {
-        res.status(400).json({
-          error: error
-        });
-      }
+        (error) => {
+            res.status(400).json({
+                error: error
+            });
+        }
     );
 });
 
-app.use((req, res) => {
-    res.json({ message: 'Your request was successful!' }); 
- });
+app.use('/api/recipes', (req, res, next) => {
+    Recipe.find()
+    .then((recipes) => {
+        res.status(200).json(recipes);
+    })
+    .catch((error) => {
+        res.status(400).json({ error: error });
+    });
+});
  
 module.exports = app;
